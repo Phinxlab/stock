@@ -86,6 +86,7 @@
                 <field name="result_package_id" invisible="1"/>
                 <field name="product_qty" invisible="1"/>
                 <field name="picking_id" invisible="1"/>
+                <field name="product_uom_category_id" invisible="1"/>
                 <field name="product_uom_id" string="Unit of Measure" groups="uom.group_uom" readonly="1"/>
                 <field name="lots_visible" invisible="1"/>
                 <field name="owner_id" readonly="1"/>
@@ -100,7 +101,7 @@
                 <field name="product_uom_qty" readonly="1"/>
             </field>
             <field name="qty_done" position="after">
-                <button name="set_all_done" string="Set all Done" type="object" icon="fa-check" states="confirmed,assigned,waiting,partially_available"/>
+                <button name="set_all_done" title="Set all Done" type="object" icon="fa-check" states="confirmed,assigned,waiting,partially_available"/>
             </field>
         </field>
     </record>
@@ -115,7 +116,7 @@
                     <field name="name" string="Descripción de origen" optional="hide"/>
                 </field>
                 <field name="qty_done" position="after">
-                    <button name="set_all_done" string="Set all Done" type="object" icon="fa-check" states="confirmed,assigned,waiting,partially_available"/>
+                    <button name="set_all_done" title="Set all Done" type="object" icon="fa-check" states="confirmed,assigned,waiting,partially_available"/>
                 </field>
                 <!-- for compatibility with web_m2x_options we force allowing create lots -->
                 <field name="lot_id" position="attributes">
@@ -131,7 +132,7 @@
         <field name="inherit_id" ref="stock.view_stock_move_line_operation_tree"/>
         <field name="arch" type="xml">
             <field name="qty_done" position="after">
-                <button name="set_all_done" string="Set all Done" type="object" icon="fa-check" states="confirmed,assigned,waiting,partially_available" context="{'from_popup':True}"/>
+                <button name="set_all_done" title="Set all Done" type="object" icon="fa-check" states="confirmed,assigned,waiting,partially_available" context="{'from_popup':True}"/>
             </field>
             <!-- for compatibility with web_m2x_options we force allowing create lots -->
             <field name="lot_id" position="attributes">
