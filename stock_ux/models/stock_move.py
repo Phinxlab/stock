@@ -26,6 +26,12 @@ class StockMove(models.Model):
         related='move_line_ids.lots_visible',
     )
 
+    picking_partner_id = fields.Many2one(
+        'res.partner',
+        'Transfer Destination Address',
+        related='picking_id.partner_id',
+    )
+
     @api.depends(
         'move_line_ids.qty_done',
         'move_line_ids.lot_id',
@@ -140,9 +146,9 @@ class StockMove(models.Model):
         of given picking.
         """
         self.ensure_one()
-        action_ref = self._context.get('action_ref')
-        form_view_ref = self._context.get('form_view_ref')
-        action = self.env.ref(action_ref).read()[0]
+        action_ref = self._context.get('action')
+        form_view_ref = self._context.get('form_view')
+        action = self.env["ir.actions.actions"]._for_xml_id(action_ref)
         form_view = self.env.ref(form_view_ref)
         res_id = self._context.get('res_id')
         action['views'] = [(form_view.id, 'form')]
@@ -161,3 +167,11 @@ class StockMove(models.Model):
                 defaults['product_uom_qty'] = 0.0
                 defaults['additional'] = True
         return defaults
+
+    @api.constrains('state')
+    def check_cancel(self):
+        if self._context.get('cancel_from_order'):
+            return
+        if self.filtered(
+            lambda x: x.picking_id and x.state == 'cancel' and not self.user_has_groups('stock_ux.allow_picking_cancellation')):
+            raise ValidationError("Only User with 'Picking cancelation allow' rights can cancel pickings")
